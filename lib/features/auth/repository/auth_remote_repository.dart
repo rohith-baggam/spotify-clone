@@ -7,7 +7,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRemoteRepository {
-  static Future<Either<FailureRespose, UserModel>> signup({
+  Future<Either<FailureRespose, UserModel>> signup({
     required String name,
     required String email,
     required String password,
@@ -29,7 +29,7 @@ class AuthRemoteRepository {
     }
   }
 
-  static Future<Either<FailureRespose, UserModel>> signin({
+  Future<Either<FailureRespose, UserModel>> signin({
     required String email,
     required String password,
   }) async {

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/core/theme/app_pallete.dart';
-import 'package:frontend/features/auth/repository/auth_remote_repository.dart';
+import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/features/auth/view/pages/login_page.dart';
 import 'package:frontend/features/auth/view/pages/widgets/auth_gradient_button.dart';
 import 'package:frontend/features/auth/view/pages/widgets/custom_field.dart';
+import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
 
-class SignUpPage extends StatefulWidget {
+class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPage();
+  ConsumerState<SignUpPage> createState() => _SignUpPage();
 }
 
-class _SignUpPage extends State<SignUpPage> {
+class _SignUpPage extends ConsumerState<SignUpPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -30,74 +31,95 @@ class _SignUpPage extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Sign Up.',
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 30),
-              CustomField(hintText: "Name", controller: nameController),
-              SizedBox(height: 15),
-              CustomField(hintText: "Email", controller: emailController),
-              SizedBox(height: 15),
-              CustomField(
-                hintText: "Password",
-                controller: passwordController,
-                isObscureText: true,
-              ),
-              SizedBox(height: 20),
-              AuthGradientButton(
-                buttonText: 'Sign Up',
-                onTap: () async {
-                  final res = await AuthRemoteRepository.signup(
-                    name: nameController.text,
-                    email: emailController.text,
-                    password: passwordController.text,
-                  );
-                  final val = switch (res) {
-                    Left(value: final l) => l,
-                    Right(value: final r) => r.toString(),
-                  };
-                  print('val');
-                  print(val);
-                },
-              ),
-              SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Already have an account ? ',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    children: [
-                      TextSpan(
-                        text: 'Sign In',
-                        style: TextStyle(
-                          color: Pallete.gradient2,
-                          fontWeight: FontWeight.bold,
+    final isLoading = ref.watch(authViewModelProvider)?.isLoading == true;
+    ref.listen(authViewModelProvider, (_, next) {
+      next?.when(
+        data: (data) {
+          SnackBar(content: Text("Account created successfully! Please login"));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        },
+        error: (error, st) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(error.toString())));
+        },
+        loading: () {},
+      );
+    });
+    return isLoading
+        ? LoaderWidget()
+        : Scaffold(
+            appBar: AppBar(),
+            body: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Sign Up.',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    CustomField(hintText: "Name", controller: nameController),
+                    SizedBox(height: 15),
+                    CustomField(hintText: "Email", controller: emailController),
+                    SizedBox(height: 15),
+                    CustomField(
+                      hintText: "Password",
+                      controller: passwordController,
+                      isObscureText: true,
+                    ),
+                    SizedBox(height: 20),
+                    AuthGradientButton(
+                      buttonText: 'Sign Up',
+                      onTap: () async {
+                        if (formKey.currentState!.validate()) {
+                          await ref
+                              .read(authViewModelProvider.notifier)
+                              .signUpUser(
+                                name: nameController.text,
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an account ? ',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          children: [
+                            TextSpan(
+                              text: 'Sign In',
+                              style: TextStyle(
+                                color: Pallete.gradient2,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }
