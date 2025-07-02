@@ -19,7 +19,6 @@ class CustomField extends StatelessWidget {
       controller: controller,
       validator: (val) {
         if (val!.trim().isEmpty) {
-          print("$hintText is missing");
           return "$hintText is missing";
         }
         return null;

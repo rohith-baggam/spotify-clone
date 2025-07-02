@@ -1,10 +1,20 @@
 import 'dart:convert';
 import 'package:frontend/core/constants/server_constants.dart';
 import 'package:frontend/features/auth/model/user_model.dart';
+// ignore: depend_on_referenced_packages
+import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/failure/failure.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
+
+part 'auth_remote_repository.g.dart';
+
+@riverpod
+AuthRemoteRepository authRemoteRepository(Ref ref) {
+  return AuthRemoteRepository();
+}
 
 class AuthRemoteRepository {
   Future<Either<FailureRespose, UserModel>> signup({
@@ -14,7 +24,7 @@ class AuthRemoteRepository {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse("${ServerConstants.ServerUrl}/auth/signup"),
+        Uri.parse("${ServerConstants.serverUrl}/auth/signup"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'name': name, 'email': email, 'password': password}),
       );
@@ -35,18 +45,21 @@ class AuthRemoteRepository {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse("${ServerConstants.ServerUrl}/auth/login"),
+        Uri.parse("${ServerConstants.serverUrl}/auth/login"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
 
       final resBodyMap = jsonDecode(response.body) as Map<String, dynamic>;
-      print('resBodyMap');
-      print(resBodyMap);
       if (response.statusCode != 200) {
         return Left(FailureRespose(resBodyMap['detail'].toString()));
       }
-      return Right(UserModel.fromMap(resBodyMap['user']));
+
+      return Right(
+        UserModel.fromMap(
+          resBodyMap['user'],
+        ).copyWith(token: resBodyMap['token']),
+      );
     } catch (e) {
       return Left(FailureRespose(e.toString()));
     }
