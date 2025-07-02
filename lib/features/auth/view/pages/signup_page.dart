@@ -32,7 +32,9 @@ class _SignUpPage extends ConsumerState<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider)?.isLoading == true;
+    final isLoading = ref.watch(
+      authViewModelProvider.select((val) => val?.isLoading == true),
+    );
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
@@ -88,6 +90,8 @@ class _SignUpPage extends ConsumerState<SignUpPage> {
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
+                        } else {
+                          showSnackbar(context, 'Missing fields');
                         }
                       },
                     ),

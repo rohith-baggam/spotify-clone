@@ -9,6 +9,7 @@ import 'package:frontend/features/auth/view/pages/signup_page.dart';
 import 'package:frontend/features/auth/view/pages/widgets/auth_gradient_button.dart';
 import 'package:frontend/features/auth/view/pages/widgets/custom_field.dart';
 import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:frontend/features/home/view/pages/home_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -27,18 +28,24 @@ class _LoginPage extends ConsumerState<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-    formKey.currentState!.validate();
+    // formKey.currentState!.validate();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider)?.isLoading == true;
+    final isLoading = ref.watch(
+      authViewModelProvider.select((val) => val?.isLoading == true),
+    );
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
           showSnackbar(context, "You have logged in successfully");
-
-          // TODO: Navigate to homepage
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(email: emailController.text),
+            ),
+          );
         },
         error: (error, st) {
           showSnackbar(context, error.toString());
@@ -83,6 +90,8 @@ class _LoginPage extends ConsumerState<LoginPage> {
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
+                        } else {
+                          showSnackbar(context, 'Missing Fields');
                         }
                       },
                     ),
