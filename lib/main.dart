@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkThemeModel,
       title: 'Flutter Demo',
       // home: SignUpPage(),
-      home: LoginPage(),
+      home: SignUpPage(),
+      // home: LoginPage(),
     );
   }
 }
