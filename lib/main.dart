@@ -37,8 +37,8 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkThemeModel,
       title: 'Spotify Clone',
-      // home: isUserLoggedIn ? HomePage() : SignUpPage(),
-      home: SignUpPage(),
+      home: isUserLoggedIn ? HomePage() : SignUpPage(),
+      // home: SignUpPage(),
     );
   }
 }

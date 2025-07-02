@@ -10,6 +10,7 @@ import 'package:frontend/features/auth/view/pages/widgets/auth_gradient_button.d
 import 'package:frontend/features/auth/view/pages/widgets/custom_field.dart';
 import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:frontend/features/home/view/pages/home_page.dart';
+import 'package:frontend/features/home/view/pages/upload_song_page.dart';
 
 // LoginPage is a stateful widget that uses Riverpod for state management
 class LoginPage extends ConsumerStatefulWidget {
@@ -50,9 +51,7 @@ class _LoginPage extends ConsumerState<LoginPage> {
           showSnackbar(context, "You have logged in successfully");
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(email: emailController.text),
-            ),
+            MaterialPageRoute(builder: (context) => UploadSongPage()),
           );
         },
         error: (error, st) {
@@ -108,16 +107,26 @@ class _LoginPage extends ConsumerState<LoginPage> {
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
-                          Navigator.pushAndRemoveUntil(
-                            // ignore: use_build_context_synchronously
-                            context,
+                          Future.microtask(() {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    HomePage(email: emailController.text),
+                              ),
+                              (_) => false,
+                            );
+                          });
+                          // Navigator.push(
+                          //   // ignore: use_build_context_synchronously
+                          //   context,
 
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  HomePage(email: emailController.text),
-                            ),
-                            (_) => false,
-                          );
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         HomePage(email: emailController.text),
+                          //   ),
+                          //   // (_) => false,
+                          // );
                         } else {
                           // Show error if form fields are empty/invalid
                           showSnackbar(context, 'Missing Fields');
