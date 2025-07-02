@@ -6,9 +6,12 @@ part of 'auth_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authViewModelHash() => r'827b5389833093cdc1fdc9508ac2632532256f33';
+String _$authViewModelHash() => r'032208d9575cf2cdc54cb55c4fc44943cb06bdc1';
 
-/// See also [AuthViewModel].
+/// Riverpod ViewModel for managing authentication state
+/// Exposes functions like login, signup, and get user
+///
+/// Copied from [AuthViewModel].
 @ProviderFor(AuthViewModel)
 final authViewModelProvider =
     AutoDisposeNotifierProvider<AuthViewModel, AsyncValue<UserModel>?>.internal(

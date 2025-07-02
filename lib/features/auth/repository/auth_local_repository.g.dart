@@ -9,7 +9,11 @@ part of 'auth_local_repository.dart';
 String _$authLocalRepositoryHash() =>
     r'4997658913f9b8ca4ef9f6396b78c449ec13991b';
 
-/// See also [authLocalRepository].
+/// A Riverpod provider for the AuthLocalRepository class.
+/// `keepAlive: true` ensures the provider is not disposed when not used.
+/// This is useful because the token might be needed any time during the app session.
+///
+/// Copied from [authLocalRepository].
 @ProviderFor(authLocalRepository)
 final authLocalRepositoryProvider = Provider<AuthLocalRepository>.internal(
   authLocalRepository,

@@ -108,13 +108,15 @@ class _LoginPage extends ConsumerState<LoginPage> {
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
-                          Navigator.push(
+                          Navigator.pushAndRemoveUntil(
                             // ignore: use_build_context_synchronously
                             context,
+
                             MaterialPageRoute(
                               builder: (context) =>
                                   HomePage(email: emailController.text),
                             ),
+                            (_) => false,
                           );
                         } else {
                           // Show error if form fields are empty/invalid

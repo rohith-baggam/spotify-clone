@@ -9,7 +9,10 @@ part of 'auth_remote_repository.dart';
 String _$authRemoteRepositoryHash() =>
     r'3a22426af88879347e1278f66bf786f109bd891c';
 
-/// See also [authRemoteRepository].
+/// This is a Riverpod provider that exposes an instance of AuthRemoteRepository.
+/// It can be used anywhere in your app via `ref.watch(authRemoteRepositoryProvider)`.
+///
+/// Copied from [authRemoteRepository].
 @ProviderFor(authRemoteRepository)
 final authRemoteRepositoryProvider =
     AutoDisposeProvider<AuthRemoteRepository>.internal(
