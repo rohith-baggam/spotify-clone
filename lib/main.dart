@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/core/providers/current_user_notifier.dart';
 import 'package:frontend/core/theme/theme.dart';
 import 'package:frontend/features/auth/view/pages/signup_page.dart';
 import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:frontend/features/home/view/pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,15 +27,18 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final currentUser = ref.watch(currentUserNotifierProvider);
-
-    // final isUserLoggedIn = currentUser != null;
+    final currentUser = ref.watch(currentUserNotifierProvider);
+    print(currentUser);
+    final isUserLoggedIn = currentUser != null;
+    print('isUserLoggedIn ');
+    print(isUserLoggedIn);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkThemeModel,
       title: 'Spotify Clone',
-      home: const SignUpPage(),
+      // home: isUserLoggedIn ? HomePage() : SignUpPage(),
+      home: SignUpPage(),
     );
   }
 }

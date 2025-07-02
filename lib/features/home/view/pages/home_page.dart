@@ -13,8 +13,10 @@ class HomePage extends ConsumerWidget {
     print('currentUser $currentUser');
 
     String? name = currentUser?.name;
+    String? newEmail = currentUser?.email;
     print('name $name');
+    print('email $newEmail');
     print('Homeend');
-    return Scaffold(body: Center(child: Text('Hello $email')));
+    return Scaffold(body: Center(child: Text('Hello $newEmail')));
   }
 }

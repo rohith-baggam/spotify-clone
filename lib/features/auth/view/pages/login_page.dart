@@ -1,16 +1,17 @@
+// Flutter and Riverpod imports
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
+
 import 'package:frontend/core/theme/app_pallete.dart';
 import 'package:frontend/core/utils.dart';
 import 'package:frontend/core/widgets/loader.dart';
-import 'package:frontend/features/auth/repository/auth_remote_repository.dart';
 import 'package:frontend/features/auth/view/pages/signup_page.dart';
 import 'package:frontend/features/auth/view/pages/widgets/auth_gradient_button.dart';
 import 'package:frontend/features/auth/view/pages/widgets/custom_field.dart';
 import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:frontend/features/home/view/pages/home_page.dart';
 
+// LoginPage is a stateful widget that uses Riverpod for state management
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -19,26 +20,33 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPage extends ConsumerState<LoginPage> {
+  // Controllers for the email and password text fields
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  // Form key to validate form input
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    // Dispose controllers when the widget is removed from the widget tree
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-    // formKey.currentState!.validate();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Watch if authViewModel is currently loading
     final isLoading = ref.watch(
       authViewModelProvider.select((val) => val?.isLoading == true),
     );
+
+    // Listen to changes in AuthViewModel
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
+          // Show success message and navigate to HomePage on successful login
           showSnackbar(context, "You have logged in successfully");
           Navigator.push(
             context,
@@ -48,15 +56,17 @@ class _LoginPage extends ConsumerState<LoginPage> {
           );
         },
         error: (error, st) {
+          // Show error message if login fails
           showSnackbar(context, error.toString());
         },
-        loading: () {},
+        loading: () {}, // Do nothing explicitly on loading
       );
     });
+
     return Scaffold(
       appBar: AppBar(),
       body: isLoading
-          ? LoaderWidget()
+          ? LoaderWidget() // Show loader while authenticating
           : Padding(
               padding: const EdgeInsets.all(15.0),
               child: Form(
@@ -64,6 +74,7 @@ class _LoginPage extends ConsumerState<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Page title
                     Text(
                       'Sign In.',
                       style: TextStyle(
@@ -72,30 +83,48 @@ class _LoginPage extends ConsumerState<LoginPage> {
                       ),
                     ),
                     SizedBox(height: 30),
+
+                    // Email input field
                     CustomField(hintText: "Email", controller: emailController),
                     SizedBox(height: 15),
+
+                    // Password input field
                     CustomField(
                       hintText: "Password",
                       controller: passwordController,
                       isObscureText: true,
                     ),
                     SizedBox(height: 20),
+
+                    // Sign In button
                     AuthGradientButton(
                       buttonText: 'Sign In',
                       onTap: () async {
                         if (formKey.currentState!.validate()) {
+                          // Call login method from AuthViewModel if form is valid
                           await ref
                               .read(authViewModelProvider.notifier)
                               .loginUser(
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
+                          Navigator.push(
+                            // ignore: use_build_context_synchronously
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  HomePage(email: emailController.text),
+                            ),
+                          );
                         } else {
+                          // Show error if form fields are empty/invalid
                           showSnackbar(context, 'Missing Fields');
                         }
                       },
                     ),
                     SizedBox(height: 20),
+
+                    // Link to Sign Up page
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
