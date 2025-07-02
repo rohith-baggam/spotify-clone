@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:frontend/core/theme/app_pallete.dart';
+import 'package:frontend/core/utils.dart';
 import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/features/auth/repository/auth_remote_repository.dart';
 import 'package:frontend/features/auth/view/pages/signup_page.dart';
@@ -35,29 +36,14 @@ class _LoginPage extends ConsumerState<LoginPage> {
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
-          print('data $next');
-          print(1);
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text('sucess')));
-          print(2);
-          ;
+          showSnackbar(context, "You have logged in successfully");
 
           // TODO: Navigate to homepage
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const LoginPage()),
-          // );
         },
         error: (error, st) {
-          print('error $next');
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(error.toString())));
+          showSnackbar(context, error.toString());
         },
-        loading: () {
-          print('loading $next');
-        },
+        loading: () {},
       );
     });
     return Scaffold(
@@ -98,16 +84,6 @@ class _LoginPage extends ConsumerState<LoginPage> {
                                 password: passwordController.text,
                               );
                         }
-                        // final res = await AuthRemoteRepository().signin(
-                        //   email: emailController.text,
-                        //   password: passwordController.text,
-                        // );
-                        // final val = switch (res) {
-                        //   Left(value: final l) => l,
-                        //   Right(value: final r) => r,
-                        // };
-                        // print('val');
-                        // print(val);
                       },
                     ),
                     SizedBox(height: 20),

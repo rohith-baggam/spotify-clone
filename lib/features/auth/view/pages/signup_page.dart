@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/core/theme/app_pallete.dart';
+import 'package:frontend/core/utils.dart';
 import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/features/auth/view/pages/login_page.dart';
 import 'package:frontend/features/auth/view/pages/widgets/auth_gradient_button.dart';
@@ -35,16 +36,14 @@ class _SignUpPage extends ConsumerState<SignUpPage> {
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
-          SnackBar(content: Text("Account created successfully! Please login"));
+          showSnackbar(context, "Account created successfully! Please login");
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         },
         error: (error, st) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(error.toString())));
+          showSnackbar(context, error.toString());
         },
         loading: () {},
       );
