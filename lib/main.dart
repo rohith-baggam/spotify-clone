@@ -4,7 +4,7 @@ import 'package:frontend/core/providers/current_user_notifier.dart';
 import 'package:frontend/core/theme/theme.dart';
 import 'package:frontend/features/auth/view/pages/signup_page.dart';
 import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
-import 'package:frontend/features/home/view/pages/home_page.dart';
+import 'package:frontend/features/home/view/pages/upload_song_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +37,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkThemeModel,
       title: 'Spotify Clone',
-      home: isUserLoggedIn ? HomePage() : SignUpPage(),
+      home: isUserLoggedIn ? UploadSongPage() : SignUpPage(),
       // home: SignUpPage(),
     );
   }

@@ -6,8 +6,8 @@ import 'package:frontend/core/theme/app_pallete.dart';
 import 'package:frontend/core/utils.dart';
 import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/features/auth/view/pages/signup_page.dart';
-import 'package:frontend/features/auth/view/pages/widgets/auth_gradient_button.dart';
-import 'package:frontend/features/auth/view/pages/widgets/custom_field.dart';
+import 'package:frontend/features/auth/view/widgets/auth_gradient_button.dart';
+import 'package:frontend/core/widgets/custom_field.dart';
 import 'package:frontend/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:frontend/features/home/view/pages/home_page.dart';
 import 'package:frontend/features/home/view/pages/upload_song_page.dart';
@@ -111,22 +111,11 @@ class _LoginPage extends ConsumerState<LoginPage> {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    HomePage(email: emailController.text),
+                                builder: (context) => UploadSongPage(),
                               ),
                               (_) => false,
                             );
                           });
-                          // Navigator.push(
-                          //   // ignore: use_build_context_synchronously
-                          //   context,
-
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         HomePage(email: emailController.text),
-                          //   ),
-                          //   // (_) => false,
-                          // );
                         } else {
                           // Show error if form fields are empty/invalid
                           showSnackbar(context, 'Missing Fields');

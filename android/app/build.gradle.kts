@@ -14,6 +14,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    configurations.all(
+        resolutionStrategy {
+            eachDependency {
+                if((requested.group == "org.jetbrains.kotlin") && (requested.name.startsWith("kotlin-stdlib"))) {
+                    useVersion("1.8.0")
+                }
+            }
+        }
+    )
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
@@ -38,6 +47,8 @@ android {
         }
     }
 }
+
+
 
 flutter {
     source = "../.."
